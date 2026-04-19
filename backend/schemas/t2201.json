@@ -1,0 +1,16 @@
+{
+  "patient_last_name":              {"type": "string",  "description": "Patient's last name"},
+  "patient_first_name":             {"type": "string",  "description": "Patient's first name"},
+  "date_of_birth":                  {"type": "string",  "description": "Patient's date of birth, format YYYY-MM-DD"},
+  "sin":                            {"type": "string",  "description": "Patient's Social Insurance Number — not in clinical records, physician must enter"},
+  "address":                        {"type": "string",  "description": "Patient's home address"},
+  "diagnosis_code":                 {"type": "string",  "description": "Primary ICD-10 diagnosis code for the claimed disability"},
+  "diagnosis_description":          {"type": "string",  "description": "Plain-language description of the primary diagnosis"},
+  "marked_restriction_walking":     {"type": "boolean", "description": "True if patient has a marked restriction in walking"},
+  "marked_restriction_mental":      {"type": "boolean", "description": "True if patient has a marked restriction in mental functions"},
+  "life_sustaining_therapy":        {"type": "boolean", "description": "True if patient requires life-sustaining therapy"},
+  "duration_years":                 {"type": "integer", "description": "Number of years the impairment has lasted or is expected to last"},
+  "certifying_practitioner_name":   {"type": "string",  "description": "Full name of the certifying physician"},
+  "certifying_practitioner_cpso":   {"type": "string",  "description": "CPSO registration number of the certifying physician — not in FHIR, physician must enter"},
+  "certification_date":             {"type": "string",  "description": "Date the form is being certified, format YYYY-MM-DD"}
+}

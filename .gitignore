@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Env files — never commit these
+.env
+.env.local
+.env.*.local
+
+# Node
+node_modules/
+frontend/dist/
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Render / deployment artifacts
+*.log

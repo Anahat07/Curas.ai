@@ -106,6 +106,8 @@ IBM_AI_Lab/
 ├── backend/         # FastAPI app → deployed to Render
 ├── orchestrate/     # IBM Orchestrate workflow definition
 ├── scripts/         # FHIR seed + smoke tests
+├── supabase/
+│   └── migrations/  # Postgres DDL — run in Supabase SQL editor
 └── docs/
     ├── ARCHITECTURE.md   # System design, diagrams, data flows, DB schema
     └── CONTRACTS.md      # API endpoints, Pydantic models, DDL, SSE schemas

@@ -1,0 +1,2 @@
+-- Full DDL spec: CONTRACTS.md §2
+-- Run this in the Supabase SQL editor to create all six tables.
