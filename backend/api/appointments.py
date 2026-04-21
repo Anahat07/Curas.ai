@@ -20,6 +20,7 @@ router = APIRouter()
 
 # ── In-memory session state ────────────────────────────────────────────────
 
+
 @dataclass
 class _Session:
     queue: asyncio.Queue = field(default_factory=asyncio.Queue)
@@ -31,6 +32,7 @@ class _Session:
     appointment_id: str = ""
     patient_id: str = ""
     actor_id: str = ""
+
 
 _sessions: dict[str, _Session] = {}  # keyed by appointment_id
 
@@ -98,6 +100,7 @@ async def _run_transcription(session: _Session, audio_path: str) -> None:
 
 
 # ── Endpoints ──────────────────────────────────────────────────────────────
+
 
 @router.post("/patients/{patient_id}/appointment/start")
 async def start_appointment(
