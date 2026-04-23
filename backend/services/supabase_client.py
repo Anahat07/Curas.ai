@@ -2,7 +2,7 @@ import logging
 
 from supabase import create_client, Client
 
-from backend.config import settings
+from config import settings
 
 logger = logging.getLogger(__name__)
 

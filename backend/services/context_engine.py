@@ -5,8 +5,8 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from backend.models.context_brief import BriefContent, Correspondence, InboxItem, LabResult
-from backend.services.fhir_client import (
+from models.context_brief import BriefContent, Correspondence, InboxItem, LabResult
+from services.fhir_client import (
     FHIRError,
     get_communications,
     get_conditions,
@@ -14,7 +14,7 @@ from backend.services.fhir_client import (
     get_observations,
     get_patient,
 )
-from backend.services.llm import LLMError, generate
+from services.llm import LLMError, generate
 
 logger = logging.getLogger(__name__)
 MOCK_PREAPPOINTMENT_DIR = Path(__file__).parent.parent / "data" / "preappointment_mock"

@@ -2,8 +2,8 @@ import sys
 from uuid import UUID
 from typing import Any
 
-from backend.models.enums import AuditAction
-from backend.services.supabase_client import get_client
+from models.enums import AuditAction
+from services.supabase_client import get_client
 
 
 async def log_action(

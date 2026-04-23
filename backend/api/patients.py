@@ -2,10 +2,10 @@ import logging
 from uuid import UUID
 from fastapi import APIRouter, HTTPException, Depends
 
-from backend.config import settings
-from backend.models import Patient, PatientCreate, PatientUpdate
-from backend.middleware.auth import auth_dependency
-from backend.services.supabase_client import get_client
+from config import settings
+from models import Patient, PatientCreate, PatientUpdate
+from middleware.auth import auth_dependency
+from services.supabase_client import get_client
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

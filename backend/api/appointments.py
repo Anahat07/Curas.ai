@@ -8,13 +8,13 @@ from dataclasses import dataclass, field
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 
-from backend.middleware.auth import auth_dependency
-from backend.models.soap_note import SOAPContent, BillingCode
-from backend.services.scribe import transcribe_chunks, WhisperError
-from backend.services.soap_generator import update_soap
-from backend.services.supabase_client import get_client
-from backend.services.audit import log_action
-from backend.models.enums import AuditAction
+from middleware.auth import auth_dependency
+from models.soap_note import SOAPContent, BillingCode
+from services.scribe import transcribe_chunks, WhisperError
+from services.soap_generator import update_soap
+from services.supabase_client import get_client
+from services.audit import log_action
+from models.enums import AuditAction
 
 router = APIRouter()
 

@@ -4,7 +4,7 @@ from typing import TypeVar, Type
 from pydantic import BaseModel
 from ibm_watsonx_ai.foundation_models import Model
 from ibm_watsonx_ai.metanames import GenTextParamsMetaNames as GenParams
-from backend.config import settings
+from config import settings
 
 T = TypeVar("T", bound=BaseModel)
 

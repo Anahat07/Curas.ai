@@ -1,7 +1,7 @@
 import asyncio
 from collections.abc import AsyncGenerator
 from faster_whisper import WhisperModel
-from backend.config import settings
+from config import settings
 
 _whisper_model: WhisperModel | None = None
 

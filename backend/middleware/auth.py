@@ -3,7 +3,7 @@ import json
 import base64
 from fastapi import HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from backend.config import settings
+from config import settings
 
 logger = logging.getLogger(__name__)
 security = HTTPBearer(auto_error=False)

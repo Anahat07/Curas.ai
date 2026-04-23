@@ -4,12 +4,12 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from backend.api.context_briefs import create_context_brief_record
-from backend.middleware.orchestrate_auth import orchestrate_auth_dependency
-from backend.models import PhaseAdvanceRequest, PhaseAdvanceResponse
-from backend.models.enums import AppointmentPhase, AuditAction
-from backend.services.audit import log_action
-from backend.services.supabase_client import get_client
+from api.context_briefs import create_context_brief_record
+from middleware.orchestrate_auth import orchestrate_auth_dependency
+from models import PhaseAdvanceRequest, PhaseAdvanceResponse
+from models.enums import AppointmentPhase, AuditAction
+from services.audit import log_action
+from services.supabase_client import get_client
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

@@ -4,13 +4,13 @@ from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from backend.middleware.auth import auth_dependency
-from backend.models.context_brief import ContextBrief
-from backend.models.enums import AuditAction, WorkflowState
-from backend.services.audit import log_action
-from backend.services.context_engine import build_context_brief
-from backend.services.fhir_client import FHIRError
-from backend.services.supabase_client import get_client
+from middleware.auth import auth_dependency
+from models.context_brief import ContextBrief
+from models.enums import AuditAction, WorkflowState
+from services.audit import log_action
+from services.context_engine import build_context_brief
+from services.fhir_client import FHIRError
+from services.supabase_client import get_client
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

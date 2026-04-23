@@ -2,7 +2,7 @@ import logging
 import json
 from pathlib import Path
 from typing import Any
-from backend.config import settings
+from config import settings
 
 logger = logging.getLogger(__name__)
 

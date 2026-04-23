@@ -1,6 +1,6 @@
 import logging
 from fastapi import HTTPException, Header
-from backend.config import settings
+from config import settings
 
 logger = logging.getLogger(__name__)
 

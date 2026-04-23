@@ -1,6 +1,6 @@
 from pydantic import BaseModel
-from backend.models.soap_note import SOAPContent, BillingCode
-from backend.services import llm
+from models.soap_note import SOAPContent, BillingCode
+from services import llm
 
 SOAP_SYSTEM_PROMPT = """
 You are a medical scribe. Given the current SOAP note and a new transcript segment

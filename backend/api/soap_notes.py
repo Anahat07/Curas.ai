@@ -3,11 +3,11 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from backend.middleware.auth import auth_dependency
-from backend.models.soap_note import SOAPNoteUpdate
-from backend.services.supabase_client import get_client
-from backend.services.audit import log_action
-from backend.models.enums import AuditAction
+from middleware.auth import auth_dependency
+from models.soap_note import SOAPNoteUpdate
+from services.supabase_client import get_client
+from services.audit import log_action
+from models.enums import AuditAction
 
 router = APIRouter()
 
