@@ -46,7 +46,7 @@ The `VITE_APPOINTMENT_ID` env var is used as a hardcoded appointment ID in demo/
 
 ### SSE stream (During Appointment)
 
-`DuringAppointment` opens an `EventSource` to `GET /api/patients/{id}/appointment/stream?token=<jwt>` when recording starts. It listens for `soap_update` events (updates SOAP textarea state) and `done` (closes stream, calls `POST /appointment/end`). The JWT is read from `localStorage.getItem("supabase_token")`.
+`DuringAppointment` opens an `EventSource` to `GET /api/patients/{id}/appointment/stream?appointment_id=<uuid>&token=<jwt>` **after recording stops** — once the audio blob has been uploaded and `POST /appointment/start` returns. It listens for `soap_update` events (updates SOAP textarea state) and `done` (closes stream, calls `POST /appointment/end`). The JWT is read from `localStorage.getItem("supabase_token")`.
 
 ### API client (`src/lib/api.ts`)
 

@@ -362,7 +362,7 @@ function PatientList({ onSelect }: { onSelect: (p: Patient) => void }) {
             </div>
             <div style={{ textAlign: "right" }}>
               <div style={{ fontSize: 13, fontWeight: 700, color: TEAL }}>{p.apptTime ?? "—"}</div>
-              <div style={{ fontSize: 12, color: GRAY_MID, marginTop: 2 }}>{p.apptType ?? p.workflow_state}</div>
+              <div style={{ fontSize: 12, color: GRAY_MID, marginTop: 2 }}>{p.apptType ?? p.workflow_state.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())}</div>
             </div>
             <div style={{ padding: "6px 14px", background: TEAL, color: "#fff", borderRadius: 8, fontSize: 12, fontWeight: 600 }}>
               Start →
@@ -379,12 +379,11 @@ function PatientList({ onSelect }: { onSelect: (p: Patient) => void }) {
 function PreAppointment({ patient, appointmentId, onNext }: {
   patient: Patient;
   appointmentId: string | null;
-  onNext: (briefId?: string) => void;
+  onNext: () => void;
 }) {
   const [loadStep, setLoadStep] = useState(0);
   const [started, setStarted] = useState(false);
   const [contextItems, setContextItems] = useState<ContextItem[]>(DEMO_CONTEXT_ITEMS);
-  const [briefId, setBriefId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -398,7 +397,6 @@ function PreAppointment({ patient, appointmentId, onNext }: {
     setLoading(true);
     api.generateContextBrief(patient.id, appointmentId)
       .then(brief => {
-        setBriefId(brief.id);
         const items: ContextItem[] = [];
         brief.brief_json.chronic_conditions.forEach((c: string) =>
           items.push({ label: "Condition", value: c, status: "ok" }));
@@ -470,7 +468,7 @@ function PreAppointment({ patient, appointmentId, onNext }: {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 16 }}>
               {emrDocs.map((doc, index) => {
-                const loaded = DEMO_MODE ? started && loadStep > index : doc.loaded;
+                const loaded = started && loadStep > index;
                 return (
                   <div key={index} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", background: loaded ? GREEN_LIGHT : GRAY_BG, borderRadius: 8, transition: "background 0.4s" }}>
                     <div style={{ width: 20, height: 20, borderRadius: "50%", background: loaded ? GREEN : "#d1d5db", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, color: "#fff", flexShrink: 0, transition: "background 0.4s" }}>
@@ -502,7 +500,7 @@ function PreAppointment({ patient, appointmentId, onNext }: {
       {loadStep >= 4 && (
         <div style={{ marginTop: 20, textAlign: "center" }}>
           {/* FIX: Button says "Start Appointment →" per CONTRACTS.md */}
-          <button onClick={() => onNext(briefId ?? undefined)} style={{ padding: "12px 36px", background: TEAL, color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", fontFamily: "'DM Sans', sans-serif", boxShadow: `0 2px 12px ${TEAL}44` }}>
+          <button onClick={() => onNext()} style={{ padding: "12px 36px", background: TEAL, color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", fontFamily: "'DM Sans', sans-serif", boxShadow: `0 2px 12px ${TEAL}44` }}>
             Start Appointment →
           </button>
         </div>
@@ -961,7 +959,7 @@ export default function Curas() {
 
       {phase === "list" && <PatientList onSelect={handleSelectPatient} />}
       {phase === "pre" && selectedPatient && (
-        <PreAppointment patient={selectedPatient} appointmentId={appointmentId} onNext={(briefId) => { void briefId; setPhase("during"); }} />
+        <PreAppointment patient={selectedPatient} appointmentId={appointmentId} onNext={() => setPhase("during")} />
       )}
       {phase === "during" && selectedPatient && (
         <DuringAppointment patient={selectedPatient} appointmentId={appointmentId} onNext={(noteId) => { if (noteId) setSoapNoteId(noteId); setPhase("post"); }} />
