@@ -1,11 +1,13 @@
 import asyncio
 import json
 import os
+import shutil
 from datetime import datetime, timezone
+from pathlib import Path
 from uuid import UUID
 from dataclasses import dataclass, field
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from fastapi.responses import StreamingResponse
 
 from middleware.auth import auth_dependency
@@ -100,6 +102,51 @@ async def _run_transcription(session: _Session, audio_path: str) -> None:
 
 
 # ── Endpoints ──────────────────────────────────────────────────────────────
+
+
+@router.post("/patients/{patient_id}/appointments")
+async def create_appointment(
+    patient_id: str,
+    body: dict,
+    user: dict = Depends(auth_dependency),
+):
+    """Create a new appointment for a patient (used by frontend when Orchestrate is not running)."""
+    db = get_client()
+
+    patient = db.table("patients").select("id, physician_id").eq("id", patient_id).execute()
+    if not patient.data:
+        raise HTTPException(status_code=404, detail="Patient not found")
+
+    physician_id = body.get("physician_id") or patient.data[0]["physician_id"]
+    scheduled_at = body.get("scheduled_at") or datetime.now(timezone.utc).isoformat()
+
+    row = {
+        "patient_id": patient_id,
+        "physician_id": physician_id,
+        "scheduled_at": scheduled_at,
+        "phase": "pre_appointment",
+    }
+    result = db.table("appointments").insert(row).execute()
+    if not result.data:
+        raise HTTPException(status_code=500, detail="Failed to create appointment")
+
+    return result.data[0]
+
+
+@router.post("/patients/{patient_id}/appointment/upload-audio")
+async def upload_audio(
+    patient_id: str,
+    appointment_id: str = Query(...),
+    file: UploadFile = File(...),
+    user: dict = Depends(auth_dependency),
+):
+    recordings_dir = Path(__file__).parent.parent / "data" / "recordings"
+    recordings_dir.mkdir(parents=True, exist_ok=True)
+    suffix = Path(file.filename or "audio.webm").suffix or ".webm"
+    save_path = recordings_dir / f"{appointment_id}{suffix}"
+    with open(save_path, "wb") as f:
+        shutil.copyfileobj(file.file, f)
+    return {"audio_file_path": str(save_path.resolve())}
 
 
 @router.post("/patients/{patient_id}/appointment/start")
