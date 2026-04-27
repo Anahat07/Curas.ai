@@ -24,11 +24,13 @@ async def update_soap(
     new_segment: str,
     full_transcript: str,
 ) -> tuple[SOAPContent, list[BillingCode]]:
+    prompt = f"Current SOAP:\n{current_soap.model_dump_json()}\n\n"
+    if full_transcript:
+        prompt += f"Full transcript so far:\n{full_transcript}\n\n"
+    prompt += f"New transcript segment:\n{new_segment}"
+
     result = await llm.generate(
-        prompt=(
-            f"Current SOAP:\n{current_soap.model_dump_json()}\n\n"
-            f"New transcript segment:\n{new_segment}"
-        ),
+        prompt=prompt,
         system=SOAP_SYSTEM_PROMPT,
         response_model=SOAPUpdateResult,
     )

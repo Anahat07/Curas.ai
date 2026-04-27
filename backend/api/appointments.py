@@ -84,7 +84,7 @@ async def _run_transcription(session: _Session, audio_path: str) -> None:
                 full_transcript = " ".join(session.transcript_parts)
                 updated_soap, new_codes = await update_soap(
                     current_soap=session.current_soap,
-                    new_segment="",
+                    new_segment=full_transcript,
                     full_transcript=full_transcript,
                 )
                 session.current_soap = updated_soap

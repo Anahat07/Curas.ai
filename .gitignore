@@ -26,3 +26,6 @@ frontend/dist/
 
 # Render / deployment artifacts
 *.log
+
+# Audio recordings
+backend/data/recordings/

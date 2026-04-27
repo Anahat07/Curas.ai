@@ -11,6 +11,37 @@ T = TypeVar("T", bound=BaseModel)
 _model: Model | None = None
 
 
+def _extract_json_objects(text: str) -> list[str]:
+    """Return all top-level {...} substrings from text using brace counting."""
+    results = []
+    depth = 0
+    start = -1
+    in_string = False
+    escape = False
+    for i, ch in enumerate(text):
+        if escape:
+            escape = False
+            continue
+        if ch == "\\" and in_string:
+            escape = True
+            continue
+        if ch == '"':
+            in_string = not in_string
+            continue
+        if in_string:
+            continue
+        if ch == "{":
+            if depth == 0:
+                start = i
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0 and start != -1:
+                results.append(text[start : i + 1])
+                start = -1
+    return results
+
+
 def _get_model() -> Model:
     credentials = {
         "url": settings.watsonx_url,
@@ -68,14 +99,23 @@ async def generate(
     if response_model is None:
         return raw
 
+    # Strip markdown fences first
     clean = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw, flags=re.MULTILINE).strip()
 
-    try:
-        return response_model.model_validate_json(clean)
-    except Exception as e:
-        raise LLMError(
-            f"Failed to parse Granite response into {response_model.__name__}: {e}\nRaw: {raw}"
-        ) from e
+    # Extract all top-level {...} blocks by brace-counting, try each against the model.
+    # The model sometimes emits the schema block followed by the actual answer, so we
+    # try every candidate and return the last one that validates.
+    candidates = _extract_json_objects(clean)
+    last_err: Exception | None = None
+    for candidate in reversed(candidates):
+        try:
+            return response_model.model_validate_json(candidate)
+        except Exception as e:
+            last_err = e
+
+    raise LLMError(
+        f"Failed to parse Granite response into {response_model.__name__}: {last_err}\nRaw: {raw}"
+    ) from last_err
 
 
 class LLMError(Exception):

@@ -12,7 +12,7 @@ from middleware.orchestrate_auth import orchestrate_auth_dependency
 from services.supabase_client import get_client
 from services.audit import log_action
 from services import fhir_client
-from services.llm import generate, LLMError
+from services.llm import generate, LLMError, _extract_json_objects
 from config import settings
 
 logger = logging.getLogger(__name__)
@@ -124,12 +124,13 @@ async def generate_form_draft(patient_id: UUID, request: FormDraftCreate, user: 
     # 6. Call Granite
     try:
         raw_response = await generate(prompt=prompt, system=FORM_SYSTEM_PROMPT)
-        # Parse raw JSON response
-        clean = raw_response.strip()
-        if clean.startswith("```"):
-            import re
-            clean = re.sub(r"^```(?:json)?\s*|\s*```$", "", clean, flags=re.MULTILINE).strip()
-        form_fields_raw = json.loads(clean)
+        import re
+        clean = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw_response.strip(), flags=re.MULTILINE).strip()
+        candidates = _extract_json_objects(clean)
+        if not candidates:
+            raise json.JSONDecodeError("No JSON object found in response", clean, 0)
+        # Take the largest candidate (most complete form output)
+        form_fields_raw = json.loads(max(candidates, key=len))
     except LLMError as e:
         raise HTTPException(status_code=503, detail=f"Granite call failed: {e}")
     except json.JSONDecodeError as e:
