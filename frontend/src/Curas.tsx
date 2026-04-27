@@ -110,12 +110,12 @@ const DEMO_PATIENTS: Patient[] = [
 ];
 
 const DEMO_CONTEXT_ITEMS: ContextItem[] = [
-  { label: "Last HbA1c",  value: "7.2% — Jan 2025",                  status: "ok"     },
-  { label: "Pending",     value: "ODSP form renewal",                 status: "warn"   },
-  { label: "Recent fax",  value: "Cardiology consult results",        status: "ok"     },
-  { label: "Missing",     value: "Updated medication list",           status: "danger" },
-  { label: "Active Rx",   value: "Metformin 1000mg, Lisinopril 10mg", status: "ok"     },
-  { label: "Allergies",   value: "Penicillin (severe)",               status: "danger" },
+  { label: "Last HbA1c",  value: "Start scan to load",                  status: "ok"     },
+  { label: "Pending",     value: "Start scan to load",                 status: "warn"   },
+  { label: "Recent fax",  value: "Start scan to load",        status: "ok"     },
+  { label: "Missing",     value: "Start scan to load",           status: "danger" },
+  { label: "Active Rx",   value: "Start scan to load", status: "ok"     },
+  { label: "Allergies",   value: "Start scan to load",               status: "danger" },
 ];
 
 const DEMO_EMR_DOCS: EmrDoc[] = [
