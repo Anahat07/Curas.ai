@@ -1,20 +1,11 @@
-import logging
+import os
+from supabase import create_client
 
-from supabase import create_client, Client
+def get_client():
+    url = os.getenv("SUPABASE_URL")
+    key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")  # <-- IMPORTANT FIX
 
-from config import settings
+    if not url or not key:
+        raise ValueError("Missing Supabase environment variables")
 
-logger = logging.getLogger(__name__)
-
-_client: Client | None = None
-
-
-def get_client() -> Client:
-	global _client
-	if _client is None:
-		logger.info("Initializing Supabase client")
-		_client = create_client(
-			supabase_url=settings.supabase_url,
-			supabase_key=settings.supabase_service_role_key,
-		)
-	return _client
+    return create_client(url, key)
