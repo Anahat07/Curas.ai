@@ -24,8 +24,7 @@ app = FastAPI(
     version="0.1.0",
 )
 
-app.include_router(test_router)
-
+# ADD CORS MIDDLEWARE FIRST
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -42,6 +41,7 @@ app.add_middleware(
 )
 
 # All user-facing routes under /api
+app.include_router(test_router)
 app.include_router(patients.router, prefix="/api")
 app.include_router(context_briefs.router, prefix="/api")
 app.include_router(appointments.router, prefix="/api")
