@@ -18,18 +18,15 @@ async def list_patients(user: dict = Depends(auth_dependency)):
 
         query = client.table("patients").select("*")
 
-        if settings.auth_enabled:
+        # Only filter if auth is actually enabled AND not the fallback UUID
+        if settings.auth_enabled and user["id"] != "00000000-0000-0000-0000-000000000000":
             query = query.eq("physician_id", user["id"])
 
-        # Use single order call or check if column exists
         response = query.execute()
 
-        logger.info(f"DEBUG: Retrieved {len(response.data)} patients from DB")
-        
-        patients = [Patient(**row) for row in response.data]
-        logger.info(f"DEBUG: Successfully converted to {len(patients)} Patient objects")
-        
-        return patients
+        logger.debug(f"Retrieved {len(response.data)} patients")
+
+        return [Patient(**row) for row in response.data]
 
     except Exception as e:
         logger.error(f"Error listing patients: {e}", exc_info=True)
