@@ -21,12 +21,8 @@ async def list_patients(user: dict = Depends(auth_dependency)):
         if settings.auth_enabled:
             query = query.eq("physician_id", user["id"])
 
-        response = (
-            query
-            .order("workflow_state")
-            .order("display_name")
-            .execute()
-        )
+        # Use single order call or check if column exists
+        response = query.execute()
 
         logger.info(f"DEBUG: Retrieved {len(response.data)} patients from DB")
         
